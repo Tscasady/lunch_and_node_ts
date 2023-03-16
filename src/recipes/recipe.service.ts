@@ -10,7 +10,7 @@ const conn = axios.create({
   },
 })
 
-export async function getRecipes(country: ParsedQs): Promise<Recipe[]> {
+export async function getRecipes(country: string): Promise<Recipe[]> {
   const response = await conn.get('/api/recipes/v2', {
     params: {
       q: country,
@@ -20,12 +20,16 @@ export async function getRecipes(country: ParsedQs): Promise<Recipe[]> {
 }
 
 function buildRecipes(response: AxiosResponse, country: string): Recipe[] {
-  return response.data.hits.map((recipeData: object) => {
+  return response.data.hits.map((recipeData: any): Recipe => {
     return {
-      title: recipeData.recipe.label,
-      url: recipeData.recipe.uri,
-      country: country,
-      image: recipeData.recipe.image,
+      id: null,
+      type: 'recipe',
+      attributes: {
+        title: recipeData.recipe.label,
+        url: recipeData.recipe.uri,
+        country: country,
+        image: recipeData.recipe.image
+      }
     }
   })
 }

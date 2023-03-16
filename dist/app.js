@@ -46,5 +46,6 @@ app.listen(PORT, () => {
     // tslint:disable-next-line:no-console
     console.log(`server started at http://localhost:${PORT}`);
 });
+//Routes
 app.use('/api/v1/recipes', recipes_1.recipesRouter);
 //# sourceMappingURL=app.js.map

@@ -14,49 +14,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.recipesRouter = void 0;
 const express_1 = __importDefault(require("express"));
+const recipe_service_1 = require("../recipes/recipe.service");
 exports.recipesRouter = express_1.default.Router();
-const axios_1 = __importDefault(require("axios"));
-const conn = axios_1.default.create({
-    baseURL: 'https://api.edamam.com',
-    params: {
-        type: 'public',
-        app_id: process.env.EDAMAM_APP_ID,
-        app_key: process.env.EDAMAM_APP_KEY,
-    },
-});
 /* GET recipes page. */
 exports.recipesRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const country = req.query.country;
-    // make  the api call
+    // make the API call
     try {
-        const response = yield conn
-            .get('/api/recipes/v2', {
-            params: {
-                q: country,
-            },
-        });
-        const recipes = response.data.hits.map((recipeData) => {
-            return {
-                title: recipeData.recipe.label,
-                url: recipeData.recipe.uri,
-                country,
-                image: recipeData.recipe.image,
-            };
-            // return {
-            //   id: null,
-            //   type: 'recipe',
-            //   attributes: {
-            //     title: recipe_data.recipe.label,
-            //     url: recipe_data.recipe.uri,
-            //     country: country,
-            //     image: recipe_data.recipe.image,
-            //   },
-            // }
-        });
+        let recipes = yield (0, recipe_service_1.getRecipes)(country);
+        //serialize data
         res.send(recipes);
     }
     catch (error) {
-        res.status(500).send('Server Error');
+        res.status(500).send('We goof\'d');
     }
 }));
 //# sourceMappingURL=recipes.js.map
