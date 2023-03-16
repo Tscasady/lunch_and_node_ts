@@ -1,57 +1,22 @@
-import express from "express";
+import express, { Request, Response} from "express";
+import {Recipe} from '../recipes/recipe.interface'
+import { getRecipes } from '../recipes/recipe.service'
+import { getCountry } from '../recipes/country.service'
 export const recipesRouter = express.Router()
-import axios from 'axios';
 
-const conn = axios.create({
-  baseURL: 'https://api.edamam.com',
-  params: {
-    type: 'public',
-    app_id: process.env.EDAMAM_APP_ID,
-    app_key: process.env.EDAMAM_APP_KEY,
-  },
-})
-
-
-interface Recipe {
-  title: string;
-  url: string;
-  country: string;
-  image: string;
-}
-
-/* GET recipes page. */
-recipesRouter.get('/', async (req, res) => {
-  const country = req.query.country
-
-  // make  the api call
-  try {
-    const response = await conn
-    .get('/api/recipes/v2', {
-      params: {
-        q: country,
-      },
-    });
-    const recipes: Recipe[] = response.data.hits.map((recipeData: any) => {
-      return {
-            title: recipeData.recipe.label,
-            url: recipeData.recipe.uri,
-            country,
-            image: recipeData.recipe.image,
-      }
-        // return {
-        //   id: null,
-        //   type: 'recipe',
-        //   attributes: {
-        //     title: recipe_data.recipe.label,
-        //     url: recipe_data.recipe.uri,
-        //     country: country,
-        //     image: recipe_data.recipe.image,
-        //   },
-        // }
-      });
-    res.send(recipes)
-    } catch(error) {
-    res.status(500).send('Server Error')
+/* GET recipes endpoint. */
+recipesRouter.get('/', async (req: Request, res: Response) => {
+  let country = req.query.country;
+  if(!country){
+    country = await getCountry();
   }
-})
+  country = country.toString();
+  try {
+    let recipes: Recipe[] = await getRecipes(country);
+    res.send({ data: recipes });
+  } catch (error) {
+    res.status(500).send('We goof\'d');
+  }
+});
+
 
