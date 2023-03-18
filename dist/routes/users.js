@@ -12,23 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.recipesRouter = void 0;
+exports.usersRouter = void 0;
 const express_1 = __importDefault(require("express"));
-const recipe_service_1 = require("../recipes/recipe.service");
-const country_service_1 = require("../recipes/country.service");
-exports.recipesRouter = express_1.default.Router();
+const user_interface_1 = require("../users/user.interface");
+exports.usersRouter = express_1.default.Router();
 /* GET recipes endpoint. */
-exports.recipesRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let country = req.query.country;
-    if (!country) {
-        country = yield (0, country_service_1.getCountry)();
-    }
+exports.usersRouter.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let recipes = yield (0, recipe_service_1.getRecipes)(country);
-        res.send({ data: recipes });
+        let users = yield (0, user_interface_1.getUsers)();
+        res.send({ data: users });
     }
     catch (error) {
         res.status(500).send('We goof\'d');
     }
 }));
-//# sourceMappingURL=recipes.js.map
+//# sourceMappingURL=users.js.map

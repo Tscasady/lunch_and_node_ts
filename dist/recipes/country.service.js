@@ -12,39 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRecipes = void 0;
+exports.getCountry = void 0;
 const axios_1 = __importDefault(require("axios"));
 const conn = axios_1.default.create({
-    baseURL: 'https://api.edamam.com',
-    params: {
-        type: 'public',
-        app_id: process.env.EDAMAM_APP_ID,
-        app_key: process.env.EDAMAM_APP_KEY,
-    },
+    baseURL: 'https://restcountries.com',
 });
-function getRecipes(country) {
-    return __awaiter(this, void 0, void 0, function* () {
-        const response = yield conn.get('/api/recipes/v2', {
-            params: {
-                q: country,
-            },
-        });
-        return buildRecipes(response, country);
+const getCountry = () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield conn.get('/v3.1/all')
+        .then(response => {
+        return response.data;
+    })
+        .catch(() => {
+        return ['thailand', 'mexico'];
     });
-}
-exports.getRecipes = getRecipes;
-function buildRecipes(response, country) {
-    return response.data.hits.map((recipeData) => {
-        return {
-            id: null,
-            type: 'recipe',
-            attributes: {
-                title: recipeData.recipe.label,
-                url: recipeData.recipe.uri,
-                country: country,
-                image: recipeData.recipe.image
-            }
-        };
-    });
-}
-//# sourceMappingURL=recipe.service.js.map
+    return getRandomCountry(response);
+});
+exports.getCountry = getCountry;
+const getRandomCountry = (countryList) => countryList[Math.floor(Math.random() * countryList.length)];
+//# sourceMappingURL=country.service.js.map

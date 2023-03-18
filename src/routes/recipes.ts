@@ -6,11 +6,11 @@ export const recipesRouter = express.Router()
 
 /* GET recipes endpoint. */
 recipesRouter.get('/', async (req: Request, res: Response) => {
-  let country = req.query.country;
+  let country = req.query.country as string;
+
   if(!country){
     country = await getCountry();
   }
-  country = country.toString();
   try {
     let recipes: Recipe[] = await getRecipes(country);
     res.send({ data: recipes });
@@ -18,5 +18,8 @@ recipesRouter.get('/', async (req: Request, res: Response) => {
     res.status(500).send('We goof\'d');
   }
 });
+
+
+
 
 

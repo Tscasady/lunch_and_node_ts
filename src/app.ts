@@ -4,7 +4,8 @@ import * as dotenv from "dotenv";
 // docs said do this for es6, idk why
 dotenv.config();
 import { recipesRouter } from './routes/recipes';
-import { learningResourcesRouter } from "./routes/learning_resources";
+import { learningResourcesRouter } from './routes/learning_resources';
+import { usersRouter } from './routes/users';
 
 // App Vars
 if (!process.env.PORT) {
@@ -28,4 +29,5 @@ app.listen(PORT, () => {
 //Routes
 app.use('/api/v1/recipes', recipesRouter);
 app.use('/api/v1/learning_resources', learningResourcesRouter);
+app.use('/api/v1/users', usersRouter);
 
