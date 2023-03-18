@@ -32,6 +32,8 @@ const dotenv = __importStar(require("dotenv"));
 // docs said do this for es6, idk why
 dotenv.config();
 const recipes_1 = require("./routes/recipes");
+const learning_resources_1 = require("./routes/learning_resources");
+const users_1 = require("./routes/users");
 // App Vars
 if (!process.env.PORT) {
     process.exit(1);
@@ -48,4 +50,6 @@ app.listen(PORT, () => {
 });
 //Routes
 app.use('/api/v1/recipes', recipes_1.recipesRouter);
+app.use('/api/v1/learning_resources', learning_resources_1.learningResourcesRouter);
+app.use('/api/v1/users', users_1.usersRouter);
 //# sourceMappingURL=app.js.map
